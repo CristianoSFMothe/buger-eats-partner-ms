@@ -3,6 +3,7 @@ Documentation       POST /partner Tests
 ...                 Teste do POST API
 
 Library             RequestsLibrary
+Library             RobotMongoDBLibrary.Find
 Library             RobotMongoDBLibrary.Delete
 
 *** Variables ***
@@ -16,8 +17,8 @@ ${BASE_URL}         http://localhost:3333/partners
 Should Create a New Partner
     # payload é 'carga util'
     ${payload}      Create Dictionary
-    ...             name=Pizzas Mothe
-    ...             email=contato@mothe.com.br
+    ...             name=Pizzas Mothe 3
+    ...             email=contato3@mothe.com.br
     ...             whatsapp=21988775566
     ...             business=Restaurante
 
@@ -29,12 +30,16 @@ Should Create a New Partner
     # Nestes dois comandos abaixo, o usuário será deletado antes de realizar o POST novamente.
     # Assim, não haverá problemas de duplicidade.
     ${filter}       Create Dictionary
-    ...             name=Pizzas Mothe
+    ...             name=Pizzas Mothe 3
 
-    DeleteOne      ${MONGO_URI}            ${filter}
+    DeleteOne      ${MONGO_URI}     ${filter}
 
-    ${resposnse}    POST            ${BASE_URL}
+    ${response}     POST            ${BASE_URL}
     ...             json=${payload}
     ...             headers=${headers}
 
     Status Should Be  201
+
+    ${results}     Find    ${MONGO_URI}    ${filter}
+
+    Should Be Equal     ${response.json()}[partner_id]    ${results}[0][_id]
