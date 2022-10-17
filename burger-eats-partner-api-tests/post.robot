@@ -4,6 +4,7 @@ Documentation       POST /partner Tests
 
 Library             RequestsLibrary
 Library             RobotMongoDBLibrary.Delete
+Library             RobotMongoDBLibrary.Find
 
 
 *** Variables ***
@@ -35,3 +36,7 @@ Should Create a New Partner
     ...             headers=${headers}
     
     Status Should Be  201
+
+    ${results}        Find      ${MONGO_URI}        ${filter}
+    
+    Should Be Equal    ${response.json()}[partner_id]      ${results}[0][_id]
