@@ -2,7 +2,7 @@
 Documentation       POST /partner Tests
 ...                 Teste do POST API
 
-Resource        ${EXECDIR}/resources/base.robot
+Resource        ../resources/base.robot
 
 
 
