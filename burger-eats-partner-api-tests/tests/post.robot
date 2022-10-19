@@ -2,14 +2,8 @@
 Documentation       POST /partner Tests
 ...                 Teste do POST API
 
-Library             RequestsLibrary
-Library             RobotMongoDBLibrary.Delete
+Resource        ${EXECDIR}/resources/base.robot
 
-
-*** Variables ***
-${BASE_URL}         http://localhost:3333/partners
-&{MONGO_URI}        connection=mongodb+srv://burgereats:iUVEPxA1QDZg5YAM@cluster0.majlrpu.mongodb.net/PartnerDB?retryWrites=true&w=majority
-...                 database=PartnerDB   collection=partner
 
 
 *** Test Cases ***
@@ -35,3 +29,7 @@ Should Create a New Partner
     ...             headers=${headers}
     
     Status Should Be  201
+
+    ${results}        Find      ${MONGO_URI}        ${filter}
+    
+    Should Be Equal    ${response.json()}[partner_id]      ${results}[0][_id]
